@@ -1,38 +1,28 @@
-#!/usr/bin/env bash
-# Download your model weight file.
-#
-# Rules:
-#   - Must be idempotent (safe to run multiple times).
-#   - Must download without any credentials (public URL only).
-#   - The output path must match `_runtime.model_path` in metadata.json.
+#!/bin/bash
+# download_model.sh — Downloads the Koda model weights (Qwen2.5-Coder-7B-Instruct, GGUF Q4_K_M)
+# Required by the ADTC 2026 submission template. Must be idempotent and work without credentials.
 
-set -euo pipefail
+set -e  # Exit immediately if any command fails
 
-HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MODEL_DIR="$HERE/model"
-MODEL_FILE="$MODEL_DIR/SmolLM2-135M-Instruct-Q4_K_M.gguf"
+# Directory and file names for the model weights
+MODEL_DIR="model"
+MODEL_FILE="qwen2.5-coder-7b-instruct-q4_k_m.gguf"
+MODEL_PATH="${MODEL_DIR}/${MODEL_FILE}"
 
-# ── Replace this URL with your public model weight URL ─────────────────────────
-MODEL_URL="https://huggingface.co/bartowski/SmolLM2-135M-Instruct-GGUF/resolve/main/SmolLM2-135M-Instruct-Q4_K_M.gguf"
-# ───────────────────────────────────────────────────────────────────────────────
+# Public Hugging Face URL — no authentication required
+MODEL_URL="https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct-GGUF/resolve/main/${MODEL_FILE}?download=true"
 
+# Create the model directory if it doesn't exist yet
 mkdir -p "$MODEL_DIR"
 
-if [[ -f "$MODEL_FILE" ]]; then
-  echo "model already present at $MODEL_FILE — skipping download"
-  exit 0
+# Idempotency check: skip download if the model is already present
+if [ -f "$MODEL_PATH" ]; then
+    echo "Model already exists at $MODEL_PATH — skipping download."
+    exit 0
 fi
 
-echo "downloading $MODEL_URL → $MODEL_FILE (~80 MB)…"
+# Download the model weights
+echo "Downloading Qwen2.5-Coder-7B-Instruct (Q4_K_M) from Hugging Face..."
+curl -L -o "$MODEL_PATH" "$MODEL_URL"
 
-if command -v curl > /dev/null 2>&1; then
-  curl -L --fail --progress-bar -o "$MODEL_FILE.partial" "$MODEL_URL"
-elif command -v wget > /dev/null 2>&1; then
-  wget --show-progress -O "$MODEL_FILE.partial" "$MODEL_URL"
-else
-  echo "error: neither curl nor wget found" >&2
-  exit 1
-fi
-
-mv "$MODEL_FILE.partial" "$MODEL_FILE"
-echo "done: $MODEL_FILE"
+echo "Download complete: $MODEL_PATH"
