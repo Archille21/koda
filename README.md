@@ -54,4 +54,4 @@ Built by [Pededep Mbozeko Archille](https://github.com/Archille21) — Douala, C
 
 ---
 
-*Part of the Orange Digital Center ecosystem. Built with llama.cpp, GGUF, Qwen2.5-Coder, Python, and LM Studio.*
+* Built with llama.cpp, GGUF, Qwen2.5-Coder, Python, and LM Studio.*
