@@ -1,3 +1,6 @@
+<p align="center">
+  <img width="450" alt="koda_horizontal" src="https://github.com/user-attachments/assets/09d81dda-6390-4786-bf0d-33792a8a6c1b" />
+</p>
 # Koda
 
 **Learning to code shouldn't depend on internet access.**
